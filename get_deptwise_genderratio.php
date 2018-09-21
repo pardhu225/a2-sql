@@ -16,7 +16,7 @@
 	// 	    GROUP BY emp_no
 	// 	) `b` ON `a`.emp_no = `b`.emp_no";
 
-	$sql="SELECT sum(salary) as salary, gender from (select gender, salary, dept_no, `salaries`.to_date from employees, salaries, dept_emp where `dept_emp`.dept_no=\"".$_GET['q']."\" and `employees`.emp_no=`salaries`.emp_no and `salaries`.emp_no=`dept_emp`.emp_no) a where to_date>='8000-01-01' GROUP BY gender;";
+	$sql="SELECT count(gender) as pop, gender from (select gender, dept_no from employees, dept_emp where `dept_emp`.dept_no=\"".$_GET['q']."\" and `employees`.emp_no=`dept_emp`.emp_no) a GROUP BY gender;";
 	$result = mysqli_query($con,$sql);
 	echo $con->error;
 	$m = -1;
@@ -24,20 +24,20 @@
 	echo "<table>
 	<tr>
 	<th>gender</th>
-	<th>salary</th>
+	<th>pop</th>
 	</tr>";
 	while($row = mysqli_fetch_array($result)) {
 		if($m==-1) {
-			$m = $row['salary'];
+			$m = $row['pop'];
 		} else {
-			$f = $row['salary'];
+			$f = $row['pop'];
 		}
 	    echo "<tr>";
 	    echo "<td>" . $row['gender'] . "</td>";
-	    echo "<td>" . $row['salary'] . "</td>";
+	    echo "<td>" . $row['pop'] . "</td>";
 	    echo "</tr>";
 	}
 	echo "</table>";
-	echo "Pay ratio: ".($m/$f);
+	echo "Gender ratio: ".($m/$f);
 	mysqli_close($con);
 ?>
